@@ -3,7 +3,7 @@ export default function Home() {
     <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-6">
       <section className="w-full max-w-3xl rounded-3xl border border-slate-800 bg-slate-900/80 p-10 shadow-2xl shadow-black/30">
         <p className="text-sm uppercase tracking-[0.25em] text-emerald-300">SSU Starter App</p>
-        <h1 className="mt-4 text-4xl font-semibold">A student-ready Next.js app with Supabase auth.</h1>
+        <h1 className="mt-4 text-4xl font-semibold">Professor Brockenbrough's Next Starter App</h1>
         <p className="mt-4 max-w-2xl text-slate-300">
           This starter includes login and register routes, Tailwind styling, and backend tests ready for students to clone and extend.
         </p>

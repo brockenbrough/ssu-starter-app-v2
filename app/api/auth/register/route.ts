@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       return Response.json({ error: 'Supabase credentials are not configured.' }, { status: 500 });
     }
 
-    const { data, error } = await supabase.auth.admin.createUser({ email, password });
+    const { data, error } = await supabase.auth.admin.createUser({ email, password, email_confirm: true });
 
     if (error) {
       return Response.json({ error: error.message }, { status: 400 });
