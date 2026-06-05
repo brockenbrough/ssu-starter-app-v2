@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -22,7 +24,13 @@ export default function LoginPage() {
 
     const data = await response.json();
     setLoading(false);
-    setMessage(response.ok ? 'Login request sent successfully.' : data.error || 'Login failed.');
+    if (response.ok) {
+      const accessToken = data?.session?.session?.access_token;
+      if (accessToken) localStorage.setItem('access_token', accessToken);
+      router.push('/profile');
+    } else {
+      setMessage(data.error || 'Login failed.');
+    }
   }
 
   return (

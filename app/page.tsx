@@ -10,6 +10,7 @@ export default function Home() {
         <div className="mt-8 flex flex-wrap gap-4 text-sm text-slate-200">
           <a href="/login" className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2 hover:border-emerald-400 hover:text-emerald-200">Go to login</a>
           <a href="/register" className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2 hover:border-emerald-400 hover:text-emerald-200">Go to register</a>
+          <a href="/profile" className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2 hover:border-emerald-400 hover:text-emerald-200">Go to profile</a>
           <span className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2">Tailwind CSS</span>
           <span className="rounded-full border border-slate-700 bg-slate-800 px-4 py-2">Supabase auth routes</span>
         </div>
