@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-type Profile = { id: string; username: string; biography: string };
+type Profile = { id: string; username: string; biography: string; avatar_url: string | null };
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -18,6 +18,9 @@ export default function ProfilePage() {
   const [creating, setCreating] = useState(false);
   const [newUsername, setNewUsername] = useState('');
   const [newBiography, setNewBiography] = useState('');
+
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem('access_token');
@@ -65,6 +68,24 @@ export default function ProfilePage() {
     setSaving(false);
     if (res.ok) { setProfile(data.profile); setEditing(false); }
     else setError(data.error || 'Failed to save.');
+  }
+
+  async function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file || !token) return;
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('image', file);
+    const res = await fetch('/api/profile/avatar', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    });
+    const data = await res.json();
+    setUploading(false);
+    if (res.ok) setProfile(data.profile);
+    else setError(data.error || 'Failed to upload image.');
+    event.target.value = '';
   }
 
   if (loading) {
@@ -133,7 +154,33 @@ export default function ProfilePage() {
           </>
         ) : (
           <>
-            <h1 className="mt-4 text-3xl font-semibold">{profile.username}</h1>
+            <div className="mt-6 flex flex-col items-center gap-3">
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="group relative h-24 w-24 overflow-hidden rounded-full border-2 border-slate-700 bg-slate-800 transition hover:border-emerald-400 disabled:opacity-70"
+                title="Change profile photo"
+              >
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt="Avatar" className="h-full w-full object-cover" />
+                ) : (
+                  <span className="text-3xl font-semibold text-slate-300">
+                    {profile.username[0].toUpperCase()}
+                  </span>
+                )}
+                <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 text-xs text-white opacity-0 transition group-hover:opacity-100">
+                  {uploading ? 'Uploading…' : 'Change photo'}
+                </span>
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarChange}
+              />
+              <h1 className="text-3xl font-semibold">{profile.username}</h1>
+            </div>
 
             <div className="mt-6">
               <p className="text-xs uppercase tracking-widest text-slate-400">Biography</p>
